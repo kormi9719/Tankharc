@@ -79,9 +79,18 @@ public class LoginHUD {
             public void changed(ChangeEvent event, Actor actor){
 
                 String givenPassword = DatabaseHandler.getPasswordByEmail(email.getText());
-                isEmailVerified = DatabaseHandler.getIsEmailVerified(email.getText());
-                assert givenPassword != null;
-                areCredentialsValid = givenPassword.equals(password.getText());
+                if(givenPassword != null) {
+                    String typedEmail = email.getText();
+                    String typedPassword = password.getText();
+                    if(typedEmail != null && typedPassword != null) {
+                        isEmailVerified = DatabaseHandler.getIsEmailVerified(typedEmail);
+                        areCredentialsValid = givenPassword.equals(typedPassword);
+                    } else {
+                        areCredentialsValid = false;
+                    }
+                } else {
+                    areCredentialsValid = false;
+                }
 
                 if(isEmailVerified && areCredentialsValid) {
                     User user = new User(email.getText());

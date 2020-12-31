@@ -18,8 +18,8 @@ public class Collectibles implements Screen {
 
     private final GameMain gameMain;
     private final Texture background;
-    private final ArrayList<Texture> gamblingSkins = new ArrayList<>();
-    private final ArrayList<Texture> mappingSkins = new ArrayList<>();
+    private ArrayList<Texture> gamblingSkins = new ArrayList<>();
+    private ArrayList<Texture> mappingSkins = new ArrayList<>();
     private final Texture m1Label;
     private final Texture m2Label;
     private final Texture m3Label;
@@ -31,15 +31,22 @@ public class Collectibles implements Screen {
     private final User user;
     private ArrayList<Integer> gambledSkins;
     private ArrayList<Integer> mappedSkins;
+    private final ArrayList<ArrayList<Texture>> gambleSkins;
+    private final ArrayList<ArrayList<Texture>> mapSkins;
+    private final Texture locked;
 
     public Collectibles(GameMain gameMain, User user){
 
         SkinHolder skinHolder = new SkinHolder();
-        ArrayList<ArrayList<Texture>> gambleSkins = skinHolder.getCollectiblesGamblingSkins();
-        ArrayList<ArrayList<Texture>> mapSkins = skinHolder.getCollectiblesMapSkins();
+        gambleSkins = skinHolder.getCollectiblesGamblingSkins();
+        mapSkins = skinHolder.getCollectiblesMapSkins();
+
+        locked = new Texture("collectibles/Locked.png");
 
         this.gameMain = gameMain;
         this.user = user;
+
+        collectiblesHUD = new CollectiblesHUD(gameMain, user);
 
         background = new Texture("collectibles/Background.png");
         m1Label = new Texture("buttons/Map1.png");
@@ -49,27 +56,29 @@ public class Collectibles implements Screen {
         g2Label = new Texture("buttons/Rare.png");
         g3Label = new Texture("buttons/VeryRare.png");
 
-        season = new Texture("buttons/Season1.png");
-
-        Texture locked = new Texture("collectibles/Locked.png");
+        if(collectiblesHUD.getPage() == 0) {
+            season = new Texture("buttons/Season1.png");
+        } else {
+            season = new Texture("buttons/Season2.png");
+        }
 
         int seasonNumber = GameInfo.SEASON;
         setGambledSkins(seasonNumber);
         setMappedSkins(seasonNumber);
 
+
         for(int i = 0; i < 3; i ++){
             if(gambledSkins.contains(i + 1)){
-                gamblingSkins.add(gambleSkins.get(GameInfo.SEASON - 1).get(i));
+                gamblingSkins.add(gambleSkins.get(collectiblesHUD.getPage()).get(i));
             } else {
                 gamblingSkins.add(locked);
             }
             if(mappedSkins.contains(i + 1)){
-                mappingSkins.add(mapSkins.get(GameInfo.SEASON - 1).get(i));
+                mappingSkins.add(mapSkins.get(collectiblesHUD.getPage()).get(i));
             } else {
                 mappingSkins.add(locked);
             }
         }
-        collectiblesHUD = new CollectiblesHUD(gameMain, user);
     }
 
     @Override
@@ -82,6 +91,9 @@ public class Collectibles implements Screen {
 
         Gdx.gl.glClearColor(0, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        setGambledSkins(collectiblesHUD.getPage());
+        setMappedSkins(collectiblesHUD.getPage());
 
         gameMain.getSpriteBatch().begin();
         gameMain.getSpriteBatch().draw(background, 0, 0);

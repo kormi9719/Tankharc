@@ -14,7 +14,7 @@ public class CharacterHolder {
                 String path = "characters/" + c + ".png";
                 return new Texture(path);
             } else {
-                String path = "characters/" + c + ".png";
+                String path = "characters/s" + c + ".png";
                 return new Texture(path);
             }
         }

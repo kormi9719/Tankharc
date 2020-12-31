@@ -20,6 +20,7 @@ import hu.elte.kormi.tankharc.GameMain;
 public class CollectiblesHUD {
 
     private final Stage stage;
+    private int page = GameInfo.SEASON - 1;
 
     public CollectiblesHUD(final GameMain gameMain, final User user){
 
@@ -43,6 +44,28 @@ public class CollectiblesHUD {
             }
         });
 
+        rightArrow.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                page = page + 1;
+                if(page > GameInfo.SEASON - 1){
+                    page = GameInfo.SEASON - 1;
+                }
+            }
+        });
+
+        leftArrow.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                page = page - 1;
+                if(page < 0){
+                    page = 0;
+                }
+            }
+        });
+
+
+
         stage.addActor(backBtn);
         stage.addActor(rightArrow);
         stage.addActor(leftArrow);
@@ -51,4 +74,6 @@ public class CollectiblesHUD {
     public Stage getStage() {
         return this.stage;
     }
+
+    public int getPage(){ return this.page;}
 }

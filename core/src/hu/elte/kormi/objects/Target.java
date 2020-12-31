@@ -15,7 +15,7 @@ public class Target extends Sprite {
     private final World world;
 
     public Target(World world, float xPosition, float yPosition, int id){
-        super(new Texture("target/target.png"));
+        super(new Texture("target/Target.png"));
         this.world = world;
         this.xPosition = xPosition;
         this.yPosition = yPosition;
